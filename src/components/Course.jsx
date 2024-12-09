@@ -1,11 +1,11 @@
 import './Course.css';
 
-const Course = ({term, number, title, meets}) => (
-    <div className="course">
-        <h2 className="course-number">{term} CS {number}</h2>
-        <p className="course-title">{title}</p>
+const Course = ({id, course, selected, toggleSelected}) => (
+    <div className={`course ${selected.includes(id)? "selected" : ""}`} onClick={() => toggleSelected(id)}>
+        <h2 className="course-number">{course.term} CS {course.number}</h2>
+        <p className="course-title">{course.title}</p>
         <hr className="card-text"/>
-        <p className="course-meets">{meets}</p>
+        <p className="course-meets">{course.meets}</p>
     </div>
 );
 
