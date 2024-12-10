@@ -2,6 +2,7 @@
     border: 1px solid;
     border-radius: 8px;
     padding: 1rem;
+    position: relative;
 }
 
 .course-title {
@@ -11,3 +12,25 @@
 .course.selected {
     background-color: darkgray;
 }
+
+.course.conflict {
+    background-color: #ff8989;
+    pointer-events: none;
+}
+
+.course-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 0, 0, 0.2); /* Semi-transparent red overlay */
+    color: rgb(0, 0, 0); /* Red color for the X */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem; /* Large X */
+    font-weight: bold;
+    z-index: 10; /* Ensure it's on top of other content */
+    pointer-events: none; /* Let the card visually disable interaction */
+  }

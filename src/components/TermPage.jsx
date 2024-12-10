@@ -59,7 +59,12 @@ const TermPage = () => {
         <Modal open={open} close={closeModal}>
             <Schedule selected={selectedCourses} />
         </Modal>
-        <CourseList courses={termCourses} selected={selected} toggleSelected={toggleSelected}/>
+        <CourseList 
+            courses={termCourses}
+            selected={selected} 
+            toggleSelected={toggleSelected}
+            selectedCourses={selectedCourses}
+        />
     </div>);
 }
 
