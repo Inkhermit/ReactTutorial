@@ -1,6 +1,8 @@
 import {useState} from "react";
 import Banner from "./Banner";
 import CourseList from './CourseList';
+import Modal from "./Modal";
+import Schedule from "./Schedule";
 import { useJsonQuery } from '../utilities/fetch';
 
 const terms = ["Fall", "Winter", "Spring"];
@@ -26,17 +28,38 @@ const TermPage = () => {
 
     const [selection, setSelection] = useState("Fall");
     const [schedule, isLoading, error] = useJsonQuery(dataUrl);
+    const [selected, setSelected] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    const openModal = () => setOpen(true);
+    const closeModal = () => setOpen(false);
+
+    const toggleSelected = (courseId) => setSelected(
+        selected.includes(courseId)?
+        selected.filter(id => id != courseId) : [...selected, courseId]
+    );
 
     if (error) return <h1>Error loading user data: {`${error}`}</h1>
     if (isLoading) return <h1>Loading user data...</h1>
     if (!schedule) return <h1>No user data found</h1>;
 
-    const courseSelected = Object.values(schedule.courses).filter((course) => course.term === selection);
+    const selectedCourses = Object.entries(schedule.courses)
+        .filter(([id, course]) => selected.includes(id));
+
+    const termCourses = Object.entries(schedule.courses)
+        .filter(([id, course]) => course.term === selection);
 
     return (<div>
         <Banner title={schedule.title}/>
-        <TermSelector selection={selection} setSelection={setSelection}/>
-        <CourseList courses={courseSelected}/>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <TermSelector selection={selection} setSelection={setSelection}/>
+            <button onClick={openModal}><i className="bi bi-cart4"></i></button>
+        </div>
+        
+        <Modal open={open} close={closeModal}>
+            <Schedule selected={selectedCourses} />
+        </Modal>
+        <CourseList courses={termCourses} selected={selected} toggleSelected={toggleSelected}/>
     </div>);
 }
 
