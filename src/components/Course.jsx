@@ -2,11 +2,28 @@ import { useState } from 'react';
 import catchTimeConflict from '../utilities/catchTimeConflict';
 import Modal from './Modal';
 import './Course.css';
+import useFormData from '../utilities/formData';
+
+
+const validator = (id, value) => {
+    const re = /^(?:M|Tu|W|Th|F){1,5}\s([0-9]|1[0-9]|2[0-3]):[0-5][0-9]-([0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
+
+    if (id === 'title' && value.length < 2) return 'at least two characters';
+    if (id === 'meets' && value.length > 0 && !re.test(value)) return 'illegal meeting time';
+    return '';
+}
 
 const CourseForm = ({defaultNumber, defaultTitle, defaultMeets, closeModal}) => {
+    const [state, change] = useFormData(validator, {title: defaultTitle, meets: defaultMeets});
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Form submitted!");
+        if (Object.values(state.errors || {}).some((error) => error !== '')) {
+            alert('Form has errors!');
+        } else {
+            console.log("Form submitted!");
+        }
+        
     };
 
     return (
@@ -17,16 +34,22 @@ const CourseForm = ({defaultNumber, defaultTitle, defaultMeets, closeModal}) => 
                 <input type="text" id='number' name="number" defaultValue={defaultNumber} />
                 <br></br>
                 <br></br>
+                <br></br>
 
                 <label for="title">Course Title:</label>
                 <br></br>
-                <input type="text" id='title' name="title" defaultValue={defaultTitle} />
+                <input type="text" id='title' name="title" onChange={change} defaultValue={defaultTitle}/>
+                <br></br>
+                <span>{state.errors?.title}</span>
                 <br></br>
                 <br></br>
 
+
                 <label for="meets">Course Meeting Time:</label>
                 <br></br>
-                <input type="text" id='meets' name="meets" defaultValue={defaultMeets} />
+                <input type="text" id='meets' name="meets" onChange={change} defaultValue={defaultMeets}/>
+                <br></br>
+                <span>{state.errors?.meets}</span>
                 <br></br>
                 <br></br>
 
@@ -66,6 +89,7 @@ const Course = ({id, course, selected, toggleSelected, selectedCourses}) => {
             <button onClick={(e) => openModal(e)}>Edit</button>
             <Modal open={open} close={(e) => closeModal(e)}>
                 <CourseForm 
+                    key={open}
                     defaultNumber={`${course.term} CS ${course.number}`}
                     defaultTitle={course.title}
                     defaultMeets={course.meets}
