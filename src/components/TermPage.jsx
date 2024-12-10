@@ -53,7 +53,7 @@ const TermPage = () => {
         <Banner title={schedule.title}/>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <TermSelector selection={selection} setSelection={setSelection}/>
-            <button onClick={openModal}><i className="bi bi-cart4"></i></button>
+            <button onClick={openModal}>Courses Selected</button>
         </div>
         
         <Modal open={open} close={closeModal}>

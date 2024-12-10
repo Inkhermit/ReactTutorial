@@ -34,3 +34,7 @@
     z-index: 10; /* Ensure it's on top of other content */
     pointer-events: none; /* Let the card visually disable interaction */
   }
+
+button {
+    font-size: 1rem !important;
+  }
